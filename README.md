@@ -83,6 +83,8 @@ The image list includes multi-cloud Falcon Sensor, Container Sensor, Kubernetes 
 
 If a component's regional or multi-cloud repository is unavailable or empty, synchronization retains the other variant when it has images. If neither variant can be retrieved, synchronization reports an error and leaves the previous collection unchanged. Click **Sync images now** after deploying an updated sync function to refresh existing collection data.
 
+After installation, the **Container Registry Daily Image Sync** workflow is provisioned to refresh the collection daily at 07:38 UTC. You can still use **Sync images now** for an immediate refresh.
+
 ## Contributing
 
 - [Developer Guide](docs/DEVELOPER.md)

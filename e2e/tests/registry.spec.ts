@@ -13,13 +13,28 @@ test("opens image details and paginates without syncing credentials", async ({ p
   await expect(appFrame.getByText("Last sync was")).toBeVisible();
 
   const imageList = appFrame.getByRole("list", { name: "Container registry images" });
-  await expect(imageList.getByText("(Regional)", { exact: false })).toHaveCount(0);
   const firstImage = imageList.getByRole("listitem").first();
   await expect(firstImage).toBeVisible();
   await firstImage.getByRole("button", { name: "Details" }).click();
 
+  const multiCloudHeading = firstImage.getByRole("heading", { name: "Multi-cloud registry" });
+  const cloudSpecificHeading = firstImage.getByRole("heading", { name: "Cloud-specific registry" });
+  const hasMultiCloud = (await multiCloudHeading.count()) > 0;
+  const hasCloudSpecific = (await cloudSpecificHeading.count()) > 0;
+  expect(hasMultiCloud || hasCloudSpecific).toBe(true);
+
+  if (hasMultiCloud && hasCloudSpecific) {
+    await expect(
+      multiCloudHeading.locator("xpath=..").getByText("Image path", { exact: true })
+    ).toBeVisible();
+    await expect(
+      cloudSpecificHeading.locator("xpath=..").getByText("Image path", { exact: true })
+    ).toBeVisible();
+  }
+
   await expect(appFrame.getByRole("columnheader", { name: "Tag" })).toBeVisible();
   await expect(appFrame.getByRole("columnheader", { name: "Architectures" })).toBeVisible();
+  await expect(appFrame.getByRole("columnheader", { name: "Build date" })).toBeVisible();
   await expect(appFrame.getByRole("columnheader", { name: "Digest" })).toBeVisible();
 
   const nextPage = appFrame.getByRole("button", { name: "Go to next page" });
